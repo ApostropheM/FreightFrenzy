@@ -51,12 +51,24 @@ public class DriverControlled extends LinearOpMode {
                 .addStep(0.5, 0.5, 1000)
                 .build();
 
+        boolean cheatMode = false;
         waitForStart();
         while (opModeIsActive()) {
+            
+            //Cheat code
+            if (gamepad1.x && gamepad1.y && gamepad1.a && gamepad1.dpad_up) {
+                if (gamepad1.b && cheatMode)
+                    cheatMode = false;
+                else
+                    cheatMode = true;
+            }
 
             // drive
             if (gamepad1.x) {
                 driveTrain.brake(0);
+            } else if (cheatMode) {
+                driveTrain.left.setPower(max(-1, min(gamepad1.left_trigger, 1)));
+                driveTrain.right.setPower(max(-1, min(gamepad1.right_trigger, 1)));
             } else if (mode) {
                 driveTrain.setMode(true);
                 driveTrain.drive((gamepad1.right_trigger - gamepad1.left_trigger)/3, gamepad1.left_stick_x/3);
